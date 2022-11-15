@@ -28,3 +28,4 @@ def bus_stations(request):
         'page': page,
     }
     return render(request, 'stations/index.html', context)
+н
