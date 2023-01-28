@@ -1,17 +1,17 @@
 from django.db import models
 
-class Tag(models.Model):
 
+class Tag(models.Model):
     name = models.CharField(max_length=20, verbose_name='Тег',)
 
 
 class Article(models.Model):
-
     title = models.CharField(max_length=256, verbose_name='Название')
     text = models.TextField(verbose_name='Текст')
     published_at = models.DateTimeField(verbose_name='Дата публикации')
     image = models.ImageField(null=True, blank=True, verbose_name='Изображение',)
-    tag_set = models.ManyToManyField(Tag, through='Scope', related_name='scopes', verbose_name='Тематики статьи')
+    tags = models.ManyToManyField(Tag, related_name='articles')
+
 
     class Meta:
         verbose_name = 'Статья'
@@ -24,7 +24,8 @@ class Article(models.Model):
 
 
 
+
 class Scope(models.Model):
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE,related_name='ts', verbose_name='Раздел',)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='ts')
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE,related_name='scopes', verbose_name='Раздел',)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='scopes')
     is_main = models.BooleanField(verbose_name='Основной',)
