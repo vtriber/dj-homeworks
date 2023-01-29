@@ -5,12 +5,13 @@ class Tag(models.Model):
     name = models.CharField(max_length=20, verbose_name='Тег',)
 
 
+
 class Article(models.Model):
     title = models.CharField(max_length=256, verbose_name='Название')
     text = models.TextField(verbose_name='Текст')
     published_at = models.DateTimeField(verbose_name='Дата публикации')
     image = models.ImageField(null=True, blank=True, verbose_name='Изображение',)
-    tags = models.ManyToManyField(Tag, related_name='articles')
+
 
 
     class Meta:
