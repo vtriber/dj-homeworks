@@ -4,25 +4,28 @@ from django.forms import BaseInlineFormSet
 
 from .models import Article, Tag, Scope
 
-# Не получается организовать проверку наличия одного основного тега.
-# Совсем запутался, проверка не работает
+
 
 class ScopeInlineFormset(BaseInlineFormSet):
     def clean(self):
+        tag = 0
         for form in self.forms:
-            # здесь не могу понять что нужно делать, проверка не работает
-            form.cleaned_data
-            # вызовом исключения ValidationError можно указать админке о наличие ошибки
-            # таким образом объект не будет сохранен,
-            # а пользователю выведется соответствующее сообщение об ошибке
-            raise ValidationError('Тут всегда ошибка')
-        return super().clean()  # вызываем базовый код переопределяемого метода
+            article = form.cleaned_data
+
+            if article.get('is_main'):
+                tag += 1
+        if tag == 0:
+            raise ValidationError('Укажите основной раздел')
+        elif tag > 1:
+            raise ValidationError('Основным может быть только один раздел')
+        return super().clean()
 
 
 
 class ScopeInline(admin.TabularInline):
     model = Scope
     extra = 1
+    formset = ScopeInlineFormset
 
 
 
